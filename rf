@@ -1,0 +1,542 @@
+let nome = document.querySelector('nome')
+let labelnome = document.querySelector('labelNome')
+let validarNome= false
+
+let user = document.querySelector('user')
+let labeluser = document.querySelector('labelUser')
+validarUser= false
+
+let email = document.querySelector('email')
+let labelEmail = document.querySelector('labelEmail')
+
+let senha = document.querySelector('senha')
+let labelsenha = document.querySelector('labelSenha')
+validarSenha = false
+
+let erroCad = document.querySelector('#erroCad')
+let sucessCad = document.querySelector('#sucessCad')
+
+
+nome.addEventListener('keyup', () => {
+    if(nome.value.length <= 4){
+      labelNome.setAttribute('style', 'color: red')
+      labelNome.innerHTML = 'Nome *No minimo 4 caracteres para que o Nome seja validado'
+      nome.setAttribute('style', 'border-color: red')
+      validarNome = false
+    } else {
+      labelNome.setAttribute('style', 'color: green')
+      labelNome.innerHTML = 'Nome'
+      nome.setAttribute('style', 'border-color: green')
+      validarNome = true
+    }
+  })
+
+  user.addEventListener('keyup', () => {
+    if(usuario.value.length <= 7){
+      labelUsuario.setAttribute('style', 'color: red')
+      labelUsuario.innerHTML = 'Usuário * No minimo 8 caracteres para que o usuario seja validado'
+      usuario.setAttribute('style', 'border-color: red')
+      validarUser = false
+    } else {
+      labelUsuario.setAttribute('style', 'color: green')
+      labelUsuario.innerHTML = 'Usuário'
+      usuario.setAttribute('style', 'border-color: green')
+      validarUser = true
+    }
+  })
+  
+  senha.addEventListener('keyup', () => {
+    if(senha.value.length <= 5){
+      labelSenha.setAttribute('style', 'color: red')
+      labelSenha.innerHTML = 'Senha *No minimo 6 caracteres para que a senha seja validada'
+      senha.setAttribute('style', 'border-color: red')
+      validarSenha = false
+    } else {
+      labelSenha.setAttribute('style', 'color: green')
+      labelSenha.innerHTML = 'Senha'
+      senha.setAttribute('style', 'border-color: green')
+      validarSenha = true
+    }
+  })
+
+
+function cadastrar(){
+    if (validarNome && validarSenha && validarUser) {
+        
+        let listaUsuario = JSON.parse(localStorage.getItem('listaUsurio') || '[]')
+    
+    listaUsuario.push(
+    {
+      nomeCad: nome.value,
+      userCad: usuer.value,
+      emailCad:email.value,
+      senhaCad: senha.value
+    }
+    )
+    
+    localStorage.setItem('listaUsuario', JSON.stringify(listaUsuario))
+        
+        
+        
+        sucessCad.setAttribute('style', 'display: block')
+        sucessCad.innerHTML = '<strong>Seu cadastro esta sendo realizado</strong>'
+        erroCad.setAttribute('style', 'display: none')
+        erroCad.innerHTML = ''
+
+        setTimeout(()=>{
+            window.location.href = ''
+        }, 3000)
+    } else {
+        erroCad.setAttribute('style', 'display: block')
+        erroCad.innerHTML = '<strong>Preencha as informações corretamente</strong>'
+        sucessCad.setAttribute('style', 'display: none')
+        sucessCad.innerHTML = ''
+    }
+    
+    alert('')
+}
+
+function entrar(){
+    let login = document.querySelector('#login')
+    let labelLogin = document.querySelector('#labelLogin')
+    
+    let password = document.querySelector('#password')
+    let labelPassword = document.querySelector('#labelPassword')
+    
+    let msgError = document.querySelector('#msgError')
+
+    let listaUser = []
+
+    let userValid = {
+        nome: '',
+        user: '',
+        email:'',
+        senha: ''
+      }
+      
+      listaUser = JSON.parse(localStorage.getItem('listaUsuario'))
+
+      console.log(listaUsuario)
+
+      listaUser.forEach((item) => {
+        if(login.value == item.userCad && password.value == item.senhaCad){
+           
+          userValid = {
+             nome: item.nomeCad,
+             user: item.userCad,
+             email: item.emailCad,
+             senha: item.senhaCad
+           }
+          
+        }
+      })
+
+      if(login.value == userValid.user && password.value == userValid.senha){
+        window.location.href = ''
+        
+        let mathRandom = Math.random().toString(16).substr(2)
+        let token = mathRandom + mathRandom
+        
+        localStorage.setItem('token', token)
+        localStorage.setItem('userLogado', JSON.stringify(userValid))
+      } else {
+        labelLogin.setAttribute('style', 'color: red')
+        login.setAttribute('style', 'border-color: red')
+        labelPassword.setAttribute('style', 'color: red')
+        password.setAttribute('style', 'border-color: red')
+        msgError.setAttribute('style', 'display: block')
+        msgError.innerHTML = 'Usuário ou senha incorretos'
+      }
+
+}
+
+##############################################
+
+<!doctype html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+        <link rel="stylesheet" type="text/css" href="cad.css" media="screen">
+
+        <title>Cadastro</title>
+    </head>
+
+    <body>
+        <div id="tt">
+            <h2>WELOVEMUSIC</h2>
+        </div>
+    <div class="cardcad">
+        <div>
+            <h1 id="titulo">Cadastro de Usuario</h1>
+            <br>
+        </div>
+
+        <div id='erroCad'></div>
+        <div id='sucessCad'></div>
+
+    
+        <form>
+
+            <fieldset class="grupo">
+                
+                <div class="campo">
+                    <label id="labelNome" for="nome"><strong>Nome Completo</strong></label>
+                    <input type="text" name="nome" id="nome" required>
+                </div>
+
+                
+                <div class="campo">
+                    <label id="labelUser" for="user"><strong>Nome Usuario</strong></label>
+                    <input type="text" name="user" id="user" required>
+                </div>
+            </fieldset> 
+
+            <fieldset class="grupo">
+            <div class="campo">
+                <label id="labelEmail" for="email"><strong>Email</strong></label>
+                <input type="email" name="email" id="email" required>
+            </div>
+            <div class="campo">
+                <label id="labelSenha" for="senha"><strong>Senha</strong></label>
+                <input type="password" name="senha" id="senha" required>
+            </div>
+        </fieldset>
+
+
+            <div class="campo">
+                <label><strong>Que tipo de perfil você pretende ofertar?</strong></label>
+                <label>
+                    <input type="radio" value="meimusc">Musico individual
+                </label>
+                <label>
+                    <input type="radio" value="meivend">Loja ou oficinas musicais
+                </label>
+                
+            </div>
+
+            
+            
+            <!-- Botão para enviar o formulário -->
+            <button onclick="cadastrar()" class="botao" type="submit" onsubmit="">Cadastrar</button>            
+
+        </form>
+    </div>
+
+    </body>
+
+</html>
+
+
+
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+/* Elementos com o ID "titulo" */
+#titulo {
+    margin-top: 15px;
+    font-family: sans-serif;
+    color: #380B61;
+    margin-left: 7%;
+} 
+
+#tt{
+    background-color: purple;
+    text-align: center;
+    font-size: smaller;
+    font-family: fantasy;
+    width: 100vw;
+    height: 25px;
+    margin-left: -470px;
+    margin-top: -28px;
+}
+
+
+
+
+fieldset {
+    border: 0;
+}
+
+
+body{
+    background-color: #E6E6FA;
+    font-family: sans-serif;
+    font-size: 1em;
+    color: #59429d;
+    margin-left: 36%;
+    margin-top: 2%;
+    justify-content: center;
+    background-image: url(R.jpg);
+}
+
+.cardcad{
+    width: 35vw;
+    background-color: white;
+    justify-content: center;
+    align-items: center;
+    padding: 1px 20px;
+    border-radius: 20px;
+    margin-top: 75px;
+}
+
+#erroCad{
+    text-align: center;
+  color: red;
+  background-color: white;
+  padding: 12px;
+  border-radius: 5px;
+  display: none;
+}
+
+#sucessCad{
+    text-align: center;
+  color: green;
+  background-color: #ffbbbb;
+  padding: 12px;
+  border-radius: 5px;
+  display: none;
+}
+/* Elementos de tags <body>, <input>, <Select>, <textarea> e <button> */
+input,textarea, button {
+    font-family: sans-serif;
+    font-size: 1em;
+    color: #59429d;
+    border-radius: 5px;
+}
+
+/* Elementos de classe "grupo" nos estados das pseudoclasses "before" e "after" */
+.grupo:before, .grupo:after {
+    display: table;
+}
+
+/* Elementos de classe "grupo" no estado da pseudoclasse "after" */
+.grupo:after {
+    clear: both;
+}
+
+/* Elementos de classe "campo" */
+.campo {
+    margin-bottom: 1em;
+}
+
+/* Elementos de classe "campo" de tag <label> */
+.campo label {
+    margin-bottom: 0.2em;
+    color: #59429d;
+    display: block;
+}
+
+/* Elementos de classe "campo" ou "grupo" de tag <fieldset> */
+fieldset.grupo .campo {
+    float:  left;
+    margin-right: 1em;
+}
+
+/* Elementos de classe "campo" das tags <input> com atributo text e email, da tag <select> e da tag <textarea>*/
+.campo input[type="text"], .campo input[type="email"],.campo input[type="password"], .campo select, .campo textarea {
+    padding: 0.2em;
+    border: 1px solid #59429d;
+    box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
+    display: block;
+}
+
+
+
+/* Elemento de classe "campo" com tag <input>, <select> e <textarea> tocas com estado da pseudoclasse "focus"*/
+.campo input:focus, .campo textarea:focus {
+    background: #E0E0F8;
+}
+
+/* Elemento de classe "botao" */
+.botao {
+    font-size: 1.2em;
+    background: #59429d;
+    border: 0;
+    margin-bottom: 1em;
+    color: #ffffff;
+    padding: 0.2em 0.6em;
+    box-shadow: 2px 2px 2px rgba(0,0,0,0.2);
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-left: 15px 15px;
+    margin-left: 150px;
+  
+}
+
+/* Elemento de classe "botao" com o estado da pseudoclasse "hover" */
+.botao:hover {
+    background: #CCBBFF;
+    box-shadow: inset 2px 2px 2px rgba(0,0,0,0.2);
+    text-shadow: none;
+}
+
+/* Elementos de classe botão e de tag <select> */
+.botao{
+    cursor: pointer;
+}
+
+###################################
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="proj.css">
+    <title>Document</title>
+</head>
+<body>
+    <div id="titulo">
+        <h2>WELOVEMUSIC</h2>
+    </div>
+    <div class="mainlogin">
+
+        <div class="msgError"></div>
+        
+        <div class="logando">
+            <div class="cardlogin">
+                <div class="textinput">
+                    <label id="labelLogin" for="login">Login</label>
+                    <input type="text" name="login" placeholder="Usuario">
+                </div>
+                <div class="textinput">
+                    <label id="labelPassword" for="senha">Senha</label>
+                    <input type="password" name="senha" placeholder="Senha">
+                </div>
+                <div class="butao">
+                <button onclick="entrar()" class="btn-login">Login</button>
+                <button class="btn-cadastro">Cadastrar-se</button>
+            </div>
+            </div>
+          
+        </div>
+        
+    </div>
+</body>
+</html>
+
+
+
+body{
+    margin: 0;
+}
+
+#titulo{
+    background-color: purple;
+    text-align: center;
+    font-size: smaller;
+    font-family: fantasy;
+    width: 100vw;
+    height: 25px;
+}
+
+.mainlogin{
+    width: 100vw;
+    height: 100vh;
+    background-color: #E6E6FA;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logando{
+    width: 60vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cardlogin{
+    width: 60%;
+    background-color: purple;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 30px 35px;
+    border-radius: 20px;
+    margin-top: -180px;
+}
+
+#msgError{
+    text-align: center;
+  color: red;
+  background-color: white;
+  padding: 12px;
+  border-radius: 5px;
+  display: none;
+}
+
+.textinput{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    margin: 10px 0px;
+}
+
+.textinput>input{
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    padding: 15px;
+    background-color:white;
+    color: black;
+    font-size: 15px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.textinput>label{
+    color: white;
+    margin-bottom: 12px;
+}
+
+.textinput>input::placeholder{
+    color: black;
+}
+
+
+.btn-login{
+    width: 20vw;
+    padding: 16px 0px;
+    margin: 8px;
+    border: none;
+    border-radius: 10px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    background-color: slateblue;
+    cursor: pointer;
+}
+
+.btn-cadastro{
+    width: 20vw;
+    padding: 16px 0px;
+    margin: 8px;
+    border: none;
+    border-radius: 10px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    background-color: orangered;
+    cursor: pointer;
+}
+
+.butao{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    width: 70vw;
+    margin: 0;
+}
